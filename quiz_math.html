@@ -1,0 +1,63 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        .question { font-size: 24px; margin-bottom: 20px; }
+        .options button { display: block; margin: 10px auto; padding: 10px 20px; font-size: 18px; }
+        .result { font-size: 20px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Math Quiz</h1>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="result" id="result"></div>
+    <button onclick="generateQuestion()">Next Question</button><script>
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateQuestion() {
+        document.getElementById("result").innerText = "";
+        let num1 = getRandomInt(1, 10);
+        let num2 = getRandomInt(1, 10);
+        let operators = ['+', '-', '*', '/'];
+        let operator = operators[getRandomInt(0, operators.length - 1)];
+        let questionText = `${num1} ${operator} ${num2}`;
+        let correctAnswer = eval(questionText).toFixed(2);
+        
+        document.getElementById("question").innerText = questionText;
+        let options = [];
+        options.push(correctAnswer);
+        while (options.length < 4) {
+            let wrongAnswer = (correctAnswer * (1 + Math.random() * 0.5)).toFixed(2);
+            if (!options.includes(wrongAnswer)) options.push(wrongAnswer);
+        }
+        options.sort(() => Math.random() - 0.5);
+        
+        let optionsDiv = document.getElementById("options");
+        optionsDiv.innerHTML = "";
+        options.forEach(option => {
+            let button = document.createElement("button");
+            button.innerText = option;
+            button.onclick = () => checkAnswer(option, correctAnswer);
+            optionsDiv.appendChild(button);
+        });
+    }
+
+    function checkAnswer(selected, correct) {
+        if (parseFloat(selected) === parseFloat(correct)) {
+            document.getElementById("result").innerText = "Correct! 🎉";
+        } else {
+            document.getElementById("result").innerText = "Wrong! Try again.";
+        }
+    }
+
+    generateQuestion();
+</script>
+
+</body>
+</html>
